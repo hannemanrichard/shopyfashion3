@@ -11,6 +11,7 @@ import zIndex from "@mui/material/styles/zIndex";
 import supabase from "../supabase-config";
 
 import Countdown from "react-countdown/dist/index";
+import { setCookie, getCookie } from "cookies-next";
 
 export default function Home() {
   const [fullName, setFullName] = useState("");
@@ -25,9 +26,15 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [agents, setAgents] = useState<any>([]);
   const [agentsCount, setAgentsCount] = useState(0);
-  const [previewImage, setPreviewImage] = useState("noir-01.jpg");
+  const [previewImage, setPreviewImage] = useState("noir-01.png");
   const [size, setSize] = useState("l");
   const [model, setModel] = useState(1);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  useEffect(() => {
+    const isSubmittedTemp = getCookie("is-submitted") ? true : false;
+    setIsSubmitted(isSubmittedTemp);
+  }, []);
   const router = useRouter();
   // Renderer callback with condition
   const Completionist = () => <span>You are good to go!</span>;
@@ -113,13 +120,16 @@ export default function Home() {
     ) {
       try {
         setIsLoading(true);
-        let agentId;
+        // let agentId;
         /*if (agentsCount !== 0) {
           agentId = agents[Math.floor(Math.random() * agentsCount)].id;
         } else {
           agentId = 23;
         }*/
-        agentId = 17;
+        const agents_dict = [17, 23];
+        const agentId =
+          agents_dict[Math.floor(Math.random() * agents_dict.length)];
+
         let productModel;
         let productColor;
         switch (model) {
@@ -162,7 +172,7 @@ export default function Home() {
           phone: `${number}`,
           wilaya: province,
           commune: address,
-          product: `ensemble_`,
+          product: `ensemble_n2_`,
           size,
           color: productColor,
           agent_id: agentId,
@@ -171,6 +181,8 @@ export default function Home() {
         if (error) {
           setFormErr(false);
         } else {
+          setCookie("is-submitted", true, { maxAge: 60 * 60 * 3});
+          setIsSubmitted(true);
           router.push("/thankyou");
         }
       } catch (error) {
@@ -265,8 +277,7 @@ export default function Home() {
             <p className="text-xl  font-bold text-center  text-white bg-gray-800 rounded-xl py-2 mt-1">
               {/* <span className="text-orange-500"> (35% تخفيض)</span> */}
               عرض محدود استفد من{" "}
-              <span className="text-red-500">تخفيض (35%)</span> مع
-              <span className="text-green-400"> توصيل مجاني </span>
+              <span className="text-green-500">تخفيض (36%)</span>
             </p>
           </div>
 
@@ -277,39 +288,32 @@ export default function Home() {
                   <img src={previewImage} alt="" className="w-full" />
                 </div>
                 <div className="grid gap-2 grid-cols-6 mt-2">
-                  <button onClick={() => setPreviewImage("noir-01.jpg")}>
-                    <Image src="/noir-01.jpg" width={128} height={160} alt="" />
+                  <button onClick={() => setPreviewImage("noir-01.png")}>
+                    <Image src="/noir-01.png" width={128} height={160} alt="" />
                   </button>
-                  <button onClick={() => setPreviewImage("bleu-03.jpg")}>
-                    <Image src="/bleu-03.jpg" width={128} height={160} alt="" />
+                  <button onClick={() => setPreviewImage("bleu-03.png")}>
+                    <Image src="/bleu-03.png" width={128} height={160} alt="" />
                   </button>
-                  <button onClick={() => setPreviewImage("beige-01.jpg")}>
+
+                  <button onClick={() => setPreviewImage("/noir-c06.jpg")}>
                     <Image
-                      src="/beige-01.jpg"
+                      src="/noir-c06.jpg"
                       width={128}
                       height={160}
                       alt=""
                     />
                   </button>
-                  <button onClick={() => setPreviewImage("noir-d01.jpg")}>
+                  <button onClick={() => setPreviewImage("/noir-c05.jpg")}>
                     <Image
-                      src="/noir-d01.jpg"
+                      src="/noir-c05.jpg"
                       width={128}
                       height={160}
                       alt=""
                     />
                   </button>
-                  <button onClick={() => setPreviewImage("noir-d02.jpg")}>
+                  <button onClick={() => setPreviewImage("/noir-d04.jpg")}>
                     <Image
-                      src="/noir-d02.jpg"
-                      width={128}
-                      height={160}
-                      alt=""
-                    />
-                  </button>
-                  <button onClick={() => setPreviewImage("bleu-d02.jpg")}>
-                    <Image
-                      src="/bleu-d02.jpg"
+                      src="/noir-d04.jpg"
                       width={128}
                       height={160}
                       alt=""
@@ -381,41 +385,6 @@ export default function Home() {
                   className="my-3"
                   alt=""
                 />
-                <Image
-                  height={704}
-                  width={528}
-                  src="/beige-02.jpg"
-                  className="my-3"
-                  alt=""
-                />
-                <Image
-                  height={528}
-                  width={528}
-                  src="/beige-d01.jpg"
-                  className="my-3"
-                  alt=""
-                />
-                <Image
-                  height={528}
-                  width={528}
-                  src="/beige-d02.jpg"
-                  className="my-3"
-                  alt=""
-                />
-                <Image
-                  height={528}
-                  width={528}
-                  src="/beige-d03.jpg"
-                  className="my-3"
-                  alt=""
-                />
-                <Image
-                  height={704}
-                  width={528}
-                  src="/beige-03.jpg"
-                  className="my-3"
-                  alt=""
-                />
               </div>
               <div className=" text-right mt-4">
                 <h1 className="text-xl mb-2 text-white">:كيفية الطلب </h1>
@@ -448,39 +417,32 @@ export default function Home() {
                   <img src={previewImage} alt="" className="" />
                 </div>
                 <div className="grid gap-2 grid-cols-6 mt-2">
-                  <button onClick={() => setPreviewImage("noir-01.jpg")}>
-                    <Image src="/noir-01.jpg" width={128} height={160} alt="" />
+                  <button onClick={() => setPreviewImage("noir-01.png")}>
+                    <Image src="/noir-01.png" width={128} height={160} alt="" />
                   </button>
-                  <button onClick={() => setPreviewImage("bleu-03.jpg")}>
-                    <Image src="/bleu-03.jpg" width={128} height={160} alt="" />
+                  <button onClick={() => setPreviewImage("bleu-03.png")}>
+                    <Image src="/bleu-03.png" width={128} height={160} alt="" />
                   </button>
-                  <button onClick={() => setPreviewImage("beige-01.jpg")}>
+
+                  <button onClick={() => setPreviewImage("noir-d04.jpg")}>
                     <Image
-                      src="/beige-01.jpg"
+                      src="/noir-d04.jpg"
                       width={128}
                       height={160}
                       alt=""
                     />
                   </button>
-                  <button onClick={() => setPreviewImage("noir-d01.jpg")}>
+                  <button onClick={() => setPreviewImage("noir-c06.jpg")}>
                     <Image
-                      src="/noir-d01.jpg"
+                      src="/noir-c06.jpg"
                       width={128}
                       height={160}
                       alt=""
                     />
                   </button>
-                  <button onClick={() => setPreviewImage("noir-d02.jpg")}>
+                  <button onClick={() => setPreviewImage("noir-c05.jpg")}>
                     <Image
-                      src="/noir-d02.jpg"
-                      width={128}
-                      height={160}
-                      alt=""
-                    />
-                  </button>
-                  <button onClick={() => setPreviewImage("bleu-d02.jpg")}>
-                    <Image
-                      src="/bleu-d02.jpg"
+                      src="/noir-c05.jpg"
                       width={128}
                       height={160}
                       alt=""
@@ -489,6 +451,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
+
             <div className="z-10">
               <div className="flex justify-between hidden">
                 <Image
@@ -504,289 +467,301 @@ export default function Home() {
                 className="bg-[#282828] rounded-2xl w-fullborder-2 py-4 px-6 border-gray-700"
                 id="form"
               >
-                <h1 className="text-3xl  font-bold text-center text-white">
-                  {/* <span className="text-orange-500"> (35% تخفيض)</span> */}
-                  <br /> أطلب الآن واستفد من{" "}
-                  <span className="text-red-500">تخفيض (35%)</span> مع
-                  <span className="text-green-400"> توصيل مجاني </span>
-                </h1>
-                <div className="  my-4 py-4 rounded-lg bg-white/5">
-                  <h1 className="text-2xl text-orange-500 text-center">
-                    العرض ينتهي خلال
-                  </h1>
-                  <Countdown date={Date.now() + 5300000} renderer={renderer} />
-                </div>
-                <form action="#" method="post">
-                  <div className="p-4 border border-orange-600 rounded-lg mt-6">
-                    <h3 className="text-lg mt-4 text-center text-white">
-                      قم بإختيار اللون و المقاس{" "}
-                    </h3>
-                    <div>
-                      <label className="label w-full text-right block mt-3">
-                        <span className="label-text text-white ">اللون</span>
-                      </label>
-                      <div className="justify-end gap-1 flex-wrap flex mt-2">
-                        <div
-                          onClick={() => handleUpdateModel(1)}
-                          className={`flex cursor-pointer p-1 border-2 hover:border-orange-500 w-16 h-16 rounded-lg ${
-                            model === 1
-                              ? "border-orange-500"
-                              : "border-gray-700"
-                          }`}
-                        >
-                          <Image
-                            src="/noir-c1.jpg"
-                            className="rounded-lg"
-                            width={64}
-                            height={64}
-                            alt=""
-                          />
+                {isSubmitted ? (
+                  <p className="text-white text-center">
+                    شكرا جزيلا على ثقتكم سيتم الإتصال بكم في غضون 24 ساعة لتأكيد
+                    طلبكم فالرجاء إبقاء الهاتف مفتوح
+                  </p>
+                ) : (
+                  <>
+                    <h1 className="text-3xl  font-bold text-center text-white">
+                      {/* <span className="text-orange-500"> (35% تخفيض)</span> */}
+                      <br /> أطلب الآن واستفد من{" "}
+                      <span className="text-green-500">تخفيض (36%)</span>
+                    </h1>
+                    <div className="  my-4 py-4 rounded-lg bg-white/5">
+                      <h1 className="text-2xl text-orange-500 text-center">
+                        العرض ينتهي خلال
+                      </h1>
+                      <Countdown
+                        date={Date.now() + 5300000}
+                        renderer={renderer}
+                      />
+                    </div>
+                    <form action="#" method="post">
+                      <div className="p-4 border border-orange-600 rounded-lg mt-6">
+                        <h3 className="text-lg mt-4 text-center text-white">
+                          قم بإختيار اللون و المقاس{" "}
+                        </h3>
+                        <div>
+                          <label className="label w-full text-right block mt-3">
+                            <span className="label-text text-white ">
+                              اللون
+                            </span>
+                          </label>
+                          <div className="justify-end gap-1 flex-wrap flex mt-2">
+                            <div
+                              onClick={() => handleUpdateModel(1)}
+                              className={`flex cursor-pointer p-1 border-2 hover:border-orange-500 w-16 h-16 rounded-lg ${
+                                model === 1
+                                  ? "border-orange-500"
+                                  : "border-gray-700"
+                              }`}
+                            >
+                              <Image
+                                src="/noir-c1.jpg"
+                                className="rounded-lg"
+                                width={64}
+                                height={64}
+                                alt=""
+                              />
+                            </div>
+                            <div
+                              onClick={() => handleUpdateModel(2)}
+                              className={`flex cursor-pointer  p-1 border-2  hover:border-orange-500 w-16 h-16 rounded-lg ${
+                                model === 2
+                                  ? "border-orange-500"
+                                  : "border-gray-700"
+                              }`}
+                            >
+                              <Image
+                                src="/bleu-c1.jpg"
+                                width={64}
+                                height={64}
+                                alt=""
+                                className="rounded-lg"
+                              />
+                            </div>
+                          </div>
                         </div>
-                        <div
-                          onClick={() => handleUpdateModel(2)}
-                          className={`flex cursor-pointer  p-1 border-2  hover:border-orange-500 w-16 h-16 rounded-lg ${
-                            model === 2
-                              ? "border-orange-500"
-                              : "border-gray-700"
-                          }`}
-                        >
-                          <Image
-                            src="/bleu-c1.jpg"
-                            width={64}
-                            height={64}
-                            alt=""
-                            className="rounded-lg"
-                          />
+                        <div>
+                          <label className="label w-full text-right block mt-3">
+                            <span className="label-text  text-white">
+                              المقاس
+                            </span>
+                          </label>
+                          <div className="grid grid-cols-6 gap-2 mt-2">
+                            <div
+                              onClick={() => setSize("m")}
+                              className={`flex p-1 border-2 text-white cursor-pointer  hover:border-orange-500  text-center justify-center rounded-lg ${
+                                size === "m"
+                                  ? "border-orange-500"
+                                  : "border-gray-700"
+                              }`}
+                            >
+                              M
+                            </div>
+                            <div
+                              onClick={() => setSize("l")}
+                              className={`flex p-1 border-2 text-white cursor-pointer  hover:border-orange-500  text-center justify-center rounded-lg ${
+                                size === "l"
+                                  ? "border-orange-500"
+                                  : "border-gray-700"
+                              }`}
+                            >
+                              L
+                            </div>
+                            <div
+                              onClick={() => setSize("xl")}
+                              className={`flex p-1 border-2 text-white cursor-pointer  hover:border-orange-500  text-center justify-center rounded-lg ${
+                                size === "xl"
+                                  ? "border-orange-500"
+                                  : "border-gray-700"
+                              }`}
+                            >
+                              XL
+                            </div>
+                            <div
+                              onClick={() => setSize("xxl")}
+                              className={`flex p-1 border-2 text-white cursor-pointer  hover:border-orange-500  text-center justify-center rounded-lg ${
+                                size === "xxl"
+                                  ? "border-orange-500"
+                                  : "border-gray-700"
+                              }`}
+                            >
+                              XXL
+                            </div>
+                          </div>
                         </div>
-                        <div
-                          onClick={() => handleUpdateModel(3)}
-                          className={`flex cursor-pointer  p-1 border-2  hover:border-orange-500 w-16 h-16 rounded-lg ${
-                            model === 3
-                              ? "border-orange-500"
-                              : "border-gray-700"
-                          }`}
-                        >
-                          <Image
-                            src="/beige-c1.jpg"
-                            width={64}
-                            height={64}
-                            alt=""
-                            className="rounded-lg"
-                          />
+                        <div>
+                          <label className="label w-full text-right block mt-3">
+                            <span className="label-text  text-white">
+                              العرض
+                            </span>
+                          </label>
+                          <div className="grid grid-rows-2 gap-2 mt-2">
+                            <div
+                              onClick={() => setOffer(1)}
+                              className={`flex p-1 border-2 text-white cursor-pointer  hover:border-orange-500  text-center justify-center rounded-lg ${
+                                offer === 1
+                                  ? "border-orange-500"
+                                  : "border-gray-700"
+                              }`}
+                            >
+                              1 Ensemble (6900 DA)
+                            </div>
+                            <div
+                              onClick={() => setOffer(2)}
+                              className={`flex p-1 border-2 text-white cursor-pointer  hover:border-orange-500  text-center justify-center rounded-lg ${
+                                offer === 2
+                                  ? "border-orange-500"
+                                  : "border-gray-700"
+                              }`}
+                            >
+                              2 Ensembles (12900 DA)
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div>
-                      <label className="label w-full text-right block mt-3">
-                        <span className="label-text  text-white">المقاس</span>
-                      </label>
-                      <div className="grid grid-cols-6 gap-2 mt-2">
-                        <div
-                          onClick={() => setSize("m")}
-                          className={`flex p-1 border-2 text-white cursor-pointer  hover:border-orange-500  text-center justify-center rounded-lg ${
-                            size === "m"
-                              ? "border-orange-500"
-                              : "border-gray-700"
-                          }`}
-                        >
-                          M
-                        </div>
-                        <div
-                          onClick={() => setSize("l")}
-                          className={`flex p-1 border-2 text-white cursor-pointer  hover:border-orange-500  text-center justify-center rounded-lg ${
-                            size === "l"
-                              ? "border-orange-500"
-                              : "border-gray-700"
-                          }`}
-                        >
-                          L
-                        </div>
-                        <div
-                          onClick={() => setSize("xl")}
-                          className={`flex p-1 border-2 text-white cursor-pointer  hover:border-orange-500  text-center justify-center rounded-lg ${
-                            size === "xl"
-                              ? "border-orange-500"
-                              : "border-gray-700"
-                          }`}
-                        >
-                          XL
-                        </div>
-                        <div
-                          onClick={() => setSize("xxl")}
-                          className={`flex p-1 border-2 text-white cursor-pointer  hover:border-orange-500  text-center justify-center rounded-lg ${
-                            size === "xxl"
-                              ? "border-orange-500"
-                              : "border-gray-700"
-                          }`}
-                        >
-                          XXL
-                        </div>
-                      </div>
-                    </div>
-                    <div>
-                      <label className="label w-full text-right block mt-3">
-                        <span className="label-text  text-white">العرض</span>
-                      </label>
-                      <div className="grid grid-rows-2 gap-2 mt-2">
-                        <div
-                          onClick={() => setOffer(1)}
-                          className={`flex p-1 border-2 text-white cursor-pointer  hover:border-orange-500  text-center justify-center rounded-lg ${
-                            offer === 1
-                              ? "border-orange-500"
-                              : "border-gray-700"
-                          }`}
-                        >
-                          1 Ensemble (5800 DA)
-                        </div>
-                        <div
-                          onClick={() => setOffer(2)}
-                          className={`flex p-1 border-2 text-white cursor-pointer  hover:border-orange-500  text-center justify-center rounded-lg ${
-                            offer === 2
-                              ? "border-orange-500"
-                              : "border-gray-700"
-                          }`}
-                        >
-                          2 Ensembles (10800 DA)
-                        </div>
-                      </div>
-                    </div>
-                  </div>
 
-                  <h3 className="text-lg  text-center mt-4 text-white">
-                    الرجاء إدخال معلوماتك الشخصية و سوف نتصل بك للتأكيد{" "}
-                  </h3>
-                  <div>
-                    <label className="label w-full text-right block mt-3">
-                      <span className="label-text  right-0 text-white">
-                        الإسم و اللقب
-                      </span>
-                    </label>
-                    <input
-                      type="text"
-                      className="p-3 mt-2 bg-white rounded-md w-full text-right"
-                      placeholder="الإسم و اللقب"
-                      value={fullName}
-                      onBlur={() => handleSetError("name")}
-                      required
-                      onChange={(e) => setFullName(e.target.value)}
-                    />
-                    {nameErr && (
-                      <p className="text-right text-orange-600 ">ادخل الاسم</p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="label w-full text-right block mt-3">
-                      <span className="label-text  text-white">رقم الهاتف</span>
-                    </label>
-                    <input
-                      type="number"
-                      className="p-3 mt-2 bg-white rounded-md w-full text-right"
-                      placeholder="رقم الهاتف"
-                      value={number}
-                      onBlur={() => handleSetError("number")}
-                      required
-                      onChange={(e) => setNumber(e.target.value)}
-                    />
-                    {numberErr && (
-                      <p className="text-right text-orange-600">
-                        الرجاء إدخال رقم الهاتف
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="label w-full text-right block mt-3">
-                      <span className="label-text text-white ">الولاية</span>
-                    </label>
-                    <input
-                      type="text"
-                      className="p-3 mt-2 bg-white rounded-md w-full text-right"
-                      placeholder="الولاية"
-                      value={province}
-                      onBlur={() => handleSetError("province")}
-                      required
-                      onChange={(e) => setProvince(e.target.value)}
-                    />
-                    {provinceErr && (
-                      <p className="text-right text-orange-600">
-                        الرجاء إدخال الولاية
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="label w-full text-right block mt-3">
-                      <span className="label-text text-white ">البلدية</span>
-                    </label>
-                    <input
-                      type="text"
-                      className="p-3 mt-2 bg-white rounded-md w-full text-right"
-                      placeholder="البلدية"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                    />
-                  </div>
+                      <h3 className="text-lg  text-center mt-4 text-white">
+                        الرجاء إدخال معلوماتك الشخصية و سوف نتصل بك للتأكيد{" "}
+                      </h3>
+                      <div>
+                        <label className="label w-full text-right block mt-3">
+                          <span className="label-text  right-0 text-white">
+                            الإسم و اللقب
+                          </span>
+                        </label>
+                        <input
+                          type="text"
+                          className="p-3 mt-2 bg-white rounded-md w-full text-right"
+                          placeholder="الإسم و اللقب"
+                          value={fullName}
+                          onBlur={() => handleSetError("name")}
+                          required
+                          onChange={(e) => setFullName(e.target.value)}
+                        />
+                        {nameErr && (
+                          <p className="text-right text-orange-600 ">
+                            ادخل الاسم
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <label className="label w-full text-right block mt-3">
+                          <span className="label-text  text-white">
+                            رقم الهاتف
+                          </span>
+                        </label>
+                        <input
+                          type="number"
+                          className="p-3 mt-2 bg-white rounded-md w-full text-right"
+                          placeholder="رقم الهاتف"
+                          value={number}
+                          onBlur={() => handleSetError("number")}
+                          required
+                          onChange={(e) => setNumber(e.target.value)}
+                        />
+                        {numberErr && (
+                          <p className="text-right text-orange-600">
+                            الرجاء إدخال رقم الهاتف
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <label className="label w-full text-right block mt-3">
+                          <span className="label-text text-white ">
+                            الولاية
+                          </span>
+                        </label>
+                        <input
+                          type="text"
+                          className="p-3 mt-2 bg-white rounded-md w-full text-right"
+                          placeholder="الولاية"
+                          value={province}
+                          onBlur={() => handleSetError("province")}
+                          required
+                          onChange={(e) => setProvince(e.target.value)}
+                        />
+                        {provinceErr && (
+                          <p className="text-right text-orange-600">
+                            الرجاء إدخال الولاية
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <label className="label w-full text-right block mt-3">
+                          <span className="label-text text-white ">
+                            البلدية
+                          </span>
+                        </label>
+                        <input
+                          type="text"
+                          className="p-3 mt-2 bg-white rounded-md w-full text-right"
+                          placeholder="البلدية"
+                          value={address}
+                          onChange={(e) => setAddress(e.target.value)}
+                        />
+                      </div>
 
-                  <div>
-                    <div>
-                      <div className="">
-                        {/* <p className=" mr-3 my-6 text-lg text-center text-white">
+                      <div>
+                        <div>
+                          <div className="">
+                            {/* <p className=" mr-3 my-6 text-lg text-center text-white">
                           30% تخفيض
                         </p> */}
-                        <p className="sm:flex block text-center mt-12 justify-center">
-                          <span className="text-5xl text-orange-500 font-bold  block sm:inline">
-                            {offer === 1 ? "5800" : "10800"} DA
-                          </span>
+                            <p className="sm:flex block text-center mt-12 justify-center">
+                              <span className="text-5xl text-orange-500 font-bold  block sm:inline">
+                                {offer === 1 ? "6900" : "12900"} DA
+                              </span>
 
-                          <span className=" text-white text-lg line-through block sm:inline">
-                            {offer === 1 ? "8800" : "17600"} DA
-                          </span>
-                        </p>
+                              <span className=" text-white text-lg line-through block sm:inline">
+                                {offer === 1 ? "10800" : "21600"} DA
+                              </span>
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
 
-                  <div>
-                    {formErr && (
-                      <p className="text-center  bg-orange-600/60 py-3 rounded-lg mt-4">
-                        الرجاء إدخال جميع المعلومات
-                      </p>
-                    )}
-                  </div>
-                  <div className="mt-4">
-                    <button
-                      // disabled={!fullName || !number || !province}
-                      onClick={handleAddLead}
-                      disabled={isLoading}
-                      type="submit"
-                      className="bg-orange-600 hover:bg-orange-500 duration-150 ease-in-out text-white button-bounce text-2xl rounded-lg w-full p-4 text-center  font-bold "
-                    >
-                      {isLoading && <span className="loader"></span>}أطلب الآن
-                    </button>
-                  </div>
-                  <div className="w-full block md:hidden">
-                    {fullName === "" ||
-                    number === null ||
-                    address === "" ||
-                    province === "" ? (
-                      <a
-                        href="#form"
-                        className="bg-orange-500 text-white fixed bottom-3 left-3 right-3 text-xl rounded-lg  p-3 text-center  font-bold hover:bg-orange-400"
-                      >
-                        أطلب الآن
-                      </a>
-                    ) : (
-                      <button
-                        onClick={handleAddLead}
-                        disabled={isLoading}
-                        type="submit"
-                        className="bg-orange-500 z-20 text-white fixed bottom-3 left-3 right-3 text-xl rounded-lg  p-3 text-center  font-bold hover:bg-orange-400"
-                      >
-                        {isLoading && <span className="loader"></span>}أطلب الآن
-                      </button>
-                    )}
-                  </div>
-                </form>
+                      <div>
+                        {formErr && (
+                          <p className="text-center  bg-orange-600/60 py-3 rounded-lg mt-4">
+                            الرجاء إدخال جميع المعلومات
+                          </p>
+                        )}
+                      </div>
+                      <div className="mt-4">
+                        <button
+                          // disabled={!fullName || !number || !province}
+                          onClick={handleAddLead}
+                          disabled={isLoading}
+                          type="submit"
+                          className="bg-orange-600 hover:bg-orange-500 duration-150 ease-in-out text-white button-bounce text-2xl rounded-lg w-full p-4 text-center  font-bold "
+                        >
+                          {isLoading && <span className="loader"></span>}أطلب
+                          الآن
+                        </button>
+                      </div>
+                      <div className="w-full block md:hidden">
+                        {fullName === "" ||
+                        number === null ||
+                        address === "" ||
+                        province === "" ? (
+                          <a
+                            href="#form"
+                            className="bg-orange-500 text-white fixed bottom-3 left-3 right-3 text-xl rounded-lg  p-3 text-center  font-bold hover:bg-orange-400"
+                          >
+                            أطلب الآن
+                          </a>
+                        ) : (
+                          <button
+                            onClick={handleAddLead}
+                            disabled={isLoading}
+                            type="submit"
+                            className="bg-orange-500 z-20 text-white fixed bottom-3 left-3 right-3 text-xl rounded-lg  p-3 text-center  font-bold hover:bg-orange-400"
+                          >
+                            {isLoading && <span className="loader"></span>}أطلب
+                            الآن
+                          </button>
+                        )}
+                      </div>
+                    </form>
+                  </>
+                )}
               </div>
             </div>
+
             <div className="w-full block md:hidden z-0 ">
               {/* <iframe
                 // width="560"
@@ -859,42 +834,6 @@ export default function Home() {
                   height={382}
                   width={382}
                   src="/bleu-d03.jpg"
-                  className="my-3"
-                  alt=""
-                />
-
-                <Image
-                  height={510}
-                  width={382}
-                  src="/beige-02.jpg"
-                  className="my-3"
-                  alt=""
-                />
-                <Image
-                  height={382}
-                  width={382}
-                  src="/beige-d01.jpg"
-                  className="my-3"
-                  alt=""
-                />
-                <Image
-                  height={382}
-                  width={382}
-                  src="/beige-d02.jpg"
-                  className="my-3"
-                  alt=""
-                />
-                <Image
-                  height={382}
-                  width={382}
-                  src="/beige-d03.jpg"
-                  className="my-3"
-                  alt=""
-                />
-                <Image
-                  height={510}
-                  width={382}
-                  src="/beige-03.jpg"
                   className="my-3"
                   alt=""
                 />
